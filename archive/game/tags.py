@@ -12,3 +12,6 @@ IsActor: Final = "IsActor"
 
 IsItem: Final = "IsItem"
 """Entity is an item."""
+
+IsBlocking: Final = "IsBlocking"
+"""Entity is blocking movement and vision"""

@@ -10,10 +10,10 @@ import tcod.event
 import pygame.event
 import textwrap
 
-import g
-from game.components import Gold, Graphic, Position
-from game.constants import DIRECTION_KEYS
-from game.tags import IsItem, IsPlayer
+from archive import g
+from archive.game.components import Gold, Graphic, Position
+from archive.game.constants import DIRECTION_KEYS
+from archive.game.tags import IsItem, IsPlayer
 
 
 @attrs.define()
@@ -42,6 +42,7 @@ class InGame:
 
     def on_draw(self, console: tcod.console.Console) -> None:
         """Draw the standard screen."""
+        print("Updating entities")
         for entity in g.world.Q.all_of(components=[Position, Graphic]):
             pos = entity.components[Position]
             if not (0 <= pos.x < console.width and 0 <= pos.y < console.height):

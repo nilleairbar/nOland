@@ -6,8 +6,8 @@ from random import Random
 
 from tcod.ecs import Registry
 
-from game.components import Gold, Graphic, Position
-from game.tags import IsActor, IsItem, IsPlayer
+from archive.game.components import Gold, Graphic, Position
+from archive.game.tags import IsActor, IsItem, IsPlayer
 
 
 def new_world() -> Registry:

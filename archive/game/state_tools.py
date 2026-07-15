@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import tcod.console
 
-import g
-from game.state import Pop, Push, Reset, StateResult
+from archive import g
+from archive.game.state import Pop, Push, Reset, StateResult
 
 
 def main_draw() -> None:
