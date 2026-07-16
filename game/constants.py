@@ -4,9 +4,7 @@ from __future__ import annotations
 
 from typing import Final
 
-import tcod.sdl.joystick
-from pygame.constants import CONTROLLER_AXIS_LEFTX
-from tcod.event import KeySym, ControllerAxis
+from tcod.event import KeySym
 
 DIRECTION_KEYS: Final = {
     # Arrow keys
@@ -29,12 +27,12 @@ DIRECTION_KEYS: Final = {
     KeySym.KP_9: (1, -1),
     KeySym.KP_3: (1, 1),
     # VI keys
-    KeySym.H: (-1, 0),
-    KeySym.L: (1, 0),
-    KeySym.K: (0, -1),
-    KeySym.J: (0, 1),
-    KeySym.Y: (-1, -1),
-    KeySym.B: (-1, 1),
-    KeySym.U: (1, -1),
-    KeySym.N: (1, 1),
+    KeySym.h: (-1, 0),
+    KeySym.l: (1, 0),
+    KeySym.k: (0, -1),
+    KeySym.j: (0, 1),
+    KeySym.y: (-1, -1),
+    KeySym.b: (-1, 1),
+    KeySym.u: (1, -1),
+    KeySym.n: (1, 1),
 }
