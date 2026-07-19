@@ -19,6 +19,7 @@ from archive.game.tags import IsItem, IsPlayer
 @attrs.define()
 class InGame:
     """Primary in-game state."""
+
     def on_event(self, event: tcod.event.Event) -> None:
         """Handle events for the in-game state."""
         (player,) = g.world.Q.all_of(tags=[IsPlayer])
@@ -56,6 +57,6 @@ class InGame:
         # Indent all lines except the first
         if text := g.world[None].components.get(("Text", str)):
             wrapped = textwrap.fill(text, width=19)
-            lines = wrapped.split('\n')
-            formatted = lines[0] + '\n' + '\n'.join(indent_str + line for line in lines[1:])
+            lines = wrapped.split("\n")
+            formatted = lines[0] + "\n" + "\n".join(indent_str + line for line in lines[1:])
             console.print(x=1, y=0, text="* " + formatted, fg=(245, 235, 200), width=19, height=2)

@@ -23,7 +23,9 @@ class MenuItem(Protocol):
     def on_event(self, event: tcod.event.Event) -> StateResult:
         """Handle events passed to the menu item."""
 
-    def on_draw(self, console: tcod.console.Console, x: int, y: int, highlight: bool) -> None:
+    def on_draw(
+        self, console: tcod.console.Console, x: int, y: int, highlight: bool
+    ) -> None:
         """Draw is item at the given position."""
 
 
@@ -37,16 +39,59 @@ class SelectItem(MenuItem):
     def on_event(self, event: tcod.event.Event) -> StateResult:
         """Handle events selecting this item."""
         match event:
-            case tcod.event.KeyDown(sym=sym) if sym in {KeySym.RETURN, KeySym.RETURN2, KeySym.KP_ENTER}:
-                return self.callback()
-            case tcod.event.MouseButtonUp(button=tcod.event.MouseButton.LEFT):
+            case tcod.event.KeyDown(sym=sym) if sym in {
+                KeySym.RETURN,
+                KeySym.RETURN2,
+                KeySym.KP_ENTER,
+                KeySym.SPACE,
+            }:
                 return self.callback()
             case _:
                 return None
 
-    def on_draw(self, console: tcod.console.Console, x: int, y: int, highlight: bool) -> None:
+    def on_draw(
+        self, console: tcod.console.Console, x: int, y: int, highlight: bool
+    ) -> None:
         """Render this items label."""
-        console.print(x, y, self.label, fg=(255, 255, 0) if highlight else (255,255,255), bg=(64, 64, 64) if highlight else (0, 0, 0))
+        box_width = len(self.label) + 4  # +2 for padding
+        box_x = (console.width // 2) - (len(self.label) // 2) - 2
+
+        fg_color = (245, 235, 200) if highlight else (130, 130, 130)
+
+        # Custom tile characters
+        tl, tr, bl, br = "╔", "╗", "╚", "╝"  # corners
+        h_line, v_line = "─", "│"  # horizontal, vertical
+
+        # Draw corners
+        console.print(box_x, y - 1, tl, fg=fg_color)
+        console.print(box_x + box_width - 1, y - 1, tr, fg=fg_color)
+        console.print(box_x, y + 1, bl, fg=fg_color)
+        console.print(box_x + box_width - 1, y + 1, br, fg=fg_color)
+
+        # Draw horizontal edges
+        for bx in range(box_x + 1, box_x + box_width - 1):
+            console.print(bx, y - 1, h_line, fg=fg_color)
+            console.print(bx, y + 1, h_line, fg=fg_color)
+
+        # Draw vertical edges
+        console.print(box_x, y, v_line, fg=fg_color)
+        console.print(box_x + box_width - 1, y, v_line, fg=fg_color)
+
+        console.print(
+            x - len(self.label) // 2,
+            y,
+            self.label,
+            fg=(245, 235, 200) if highlight else (130, 130, 130),
+            bg=(0, 0, 0),
+        )
+
+        copyright = "Copyright Airbar 2026"
+        console.print(
+            console.width - (len(copyright)),
+            console.height - 1,
+            copyright,
+            fg=(245, 235, 200),
+        )
 
 
 @attrs.define()
@@ -73,13 +118,7 @@ class ListMenu(State):
                 else:
                     self.selected = 0 if dy == 1 else len(self.items) - 1
                 return None
-            case tcod.event.MouseMotion(position=(_, y)):
-                y -= self.y
-                self.selected = y if 0 <= y < len(self.items) else None
-                return None
             case tcod.event.KeyDown(sym=KeySym.ESCAPE):
-                return self.on_cancel()
-            case tcod.event.MouseButtonUp(button=tcod.event.MouseButton.RIGHT):
                 return self.on_cancel()
             case _:
                 return self.activate_selected(event)
@@ -90,7 +129,8 @@ class ListMenu(State):
             return self.items[self.selected].on_event(event)
         return None
 
-    def on_cancel(self) -> StateResult:
+    @staticmethod
+    def on_cancel() -> StateResult:
         """Handle escape or right click being pressed on menus."""
         return Pop()
 
@@ -98,4 +138,6 @@ class ListMenu(State):
         """Render the menu."""
         game.state_tools.draw_previous_state(self, console)
         for i, item in enumerate(self.items):
-            item.on_draw(console, x=self.x, y=self.y + i, highlight=i == self.selected)
+            item.on_draw(
+                console, x=self.x, y=self.y + i * 3, highlight=i == self.selected
+            )
