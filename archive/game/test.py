@@ -23,7 +23,7 @@ class Thing:
     x: int
     y: int
     ch: int
-    fg: tuple[int, int, int] = (255, 255, 255)
+    fg: tuple[int, int, int] = (245, 235, 200)
 
 
 FLOOR_GRAPHICS: NDArray[np.int32] = np.array([ord(ch) for ch in "    ,.'`"], dtype=np.int32)

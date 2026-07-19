@@ -38,8 +38,15 @@ class Graphic:
     """An entities icon and color."""
 
     ch: int = ord("!")
-    fg: tuple[int, int, int] = (255, 255, 255)
+    fg: tuple[int, int, int] = (245, 235, 200)
 
 
 Gold: Final = ("Gold", int)
 """Amount of gold."""
+
+
+@attrs.define(frozen=True)
+class Blocking:
+    """Is this entity blocking movement"""
+
+    block: bool = True

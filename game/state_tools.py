@@ -13,10 +13,11 @@ def main_draw() -> None:
     g.states[-1].on_draw(g.console)
     g.context.present(g.console)
 
+
 def apply_state_result(result: StateResult) -> None:
     match result:
         case Push(state=state):
-                g.states.append(state)
+            g.states.append(state)
         case Pop():
             g.states.pop()
         case Reset(state=state):
@@ -28,17 +29,23 @@ def apply_state_result(result: StateResult) -> None:
         case _:
             raise TypeError(result)
 
+
 def main_loop() -> None:
     while g.states:
+        size = g.context.sdl_window.size
+        print(size[0])
+        print(size[1])
         main_draw()
         for event in tcod.event.wait():
             tile_event = g.context.convert_event(event)
             if g.states:
                 apply_state_result(g.states[-1].on_event(tile_event))
 
+
 def get_previous_state(state: State) -> State | None:
     current_index = next(index for index, value in enumerate(g.states) if value is state)
     return g.states[current_index - 1] if current_index > 0 else None
+
 
 def draw_previous_state(state: State, console: tcod.console.Console, dim: bool = True) -> None:
     prev_state = get_previous_state(state)
@@ -46,5 +53,5 @@ def draw_previous_state(state: State, console: tcod.console.Console, dim: bool =
         return
     prev_state.on_draw(console)
     if dim and state is g.states[-1]:
-        console.rgb["fg"] //= 4
-        console.rgb["bg"] //= 4
+        console.rgb["fg"] //= 3
+        console.rgb["bg"] //= 3

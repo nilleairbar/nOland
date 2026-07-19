@@ -24,7 +24,6 @@ class State(Protocol):
 @attrs.define()
 class Push:
     """Push a new state on top of the stack."""
-
     state: State
 
 
@@ -36,7 +35,6 @@ class Pop:
 @attrs.define()
 class Reset:
     """Replace the entire stack with a new state."""
-
     state: State
 
 

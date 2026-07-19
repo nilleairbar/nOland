@@ -6,7 +6,7 @@ import display_engine
 
 # Basic initialization
 TILE_SIZE: int = 16
-TILESET_PATH = "../data/Alloy_curses_12x12.png"
+TILESET_PATH = "../data/assets/Alloy_curses_12x12.png"
 NUM_COL: int = 80
 NUM_ROW: int = 45
 WINDOW_TITLE: str = "nÖland"
