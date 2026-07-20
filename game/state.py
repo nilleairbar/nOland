@@ -5,8 +5,8 @@ from __future__ import annotations
 from typing import Protocol, TypeAlias
 
 import attrs
-import tcod.console
-import tcod.event
+import tcod.console  # type: ignore
+import tcod.event  # type: ignore
 
 
 class State(Protocol):
@@ -24,6 +24,7 @@ class State(Protocol):
 @attrs.define()
 class Push:
     """Push a new state on top of the stack."""
+
     state: State
 
 
@@ -35,6 +36,7 @@ class Pop:
 @attrs.define()
 class Reset:
     """Replace the entire stack with a new state."""
+
     state: State
 
 

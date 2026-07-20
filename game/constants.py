@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Final
 
-from tcod.event import KeySym
+from tcod.event import KeySym  # type: ignore
 
 DIRECTION_KEYS: Final = {
     # Arrow keys

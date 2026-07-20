@@ -1,11 +1,12 @@
+# coding: utf-8
 from __future__ import annotations
 
-import capnp
+import capnp  # type: ignore
 
-import tcod.console
-import tcod.context
-import tcod.event
-import tcod.tileset
+import tcod.console  # type: ignore
+import tcod.context  # type: ignore
+import tcod.event  # type: ignore
+import tcod.tileset  # type: ignore
 
 import g
 import game.states
@@ -13,7 +14,7 @@ import game.state_tools
 import game.world_tools
 
 capnp.remove_import_hook()
-nöland_capnp = capnp.load("nöland.capnp")
+nöland_capnp = capnp.load("data/nöland.capnp")
 
 
 def main() -> None:
@@ -25,13 +26,10 @@ def main() -> None:
     )
 
     tcod.tileset.procedural_block_elements(tileset=tileset)
-    g.console = tcod.console.Console(106, 60)
+    g.console = tcod.console.Console(80, 45)
     g.states = [game.states.MainMenu()]
 
     with tcod.context.new(console=g.console, tileset=tileset) as g.context:
-        with open("data/example.bin", "rb") as f:
-            person = nöland_capnp.Person.read(f)
-        print(person.name)
 
         game.state_tools.main_loop()
 

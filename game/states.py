@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import attrs
-import tcod.console
-import tcod.event
+import tcod.console  # type: ignore
+import tcod.event  # type: ignore
+from typing import Set, Tuple
 
 import g
-from game.components import Gold, Graphic, Position, Blocking
+from game.components import Gold, Graphic, Position, Blocking, Dirty
 from game.constants import DIRECTION_KEYS
 from game.menus import SelectItem
 from game.state import StateResult, Reset, State, Push
@@ -23,16 +24,27 @@ class MainMenu(game.menus.ListMenu):
 
     def __init__(self) -> None:
         """Initialize the main menu."""
+
         items = [
-            game.menus.SelectItem("New game", self.new_game),
             game.menus.SelectItem("Settings", self.options),
-            game.menus.SelectItem("Quit", self.quit),
         ]
         if hasattr(g, "world"):
-            items.insert(0, game.menus.SelectItem("Continue", self.continue_))
-            items.insert(1, game.menus.SelectItem("Save", self.savegame))
-        if hasattr(g, "savegame"):
-            items.insert(0, game.menus.SelectItem("Load", self.loadgame))
+            items.insert(0, game.menus.SelectItem("Continue", self.continue_)),
+            items.insert(
+                len(items) + 1,
+                game.menus.SelectItem("Back to menu", self.saveexit),
+            )
+            items.insert(
+                len(items) + 2,
+                game.menus.SelectItem("Quit with saving", self.saveexit),
+            )
+
+        if not hasattr(g, "world"):
+            items.insert(0, game.menus.SelectItem("New game", self.new_game)),
+            items.insert(
+                len(items) + 1,
+                game.menus.SelectItem("Quit", self.quit),
+            )
 
         super().__init__(
             items=tuple(items),
@@ -54,15 +66,20 @@ class MainMenu(game.menus.ListMenu):
 
     @staticmethod
     def options() -> StateResult:
-        print("Options window")
-
-    @staticmethod
-    def savegame() -> StateResult:
         pass
 
     @staticmethod
+    def saveexit() -> StateResult:
+        """Save the game and then close the program."""
+        raise SystemExit
+
+    @staticmethod
     def loadgame() -> StateResult:
-        print("Woud load a game")
+        pass
+
+    @staticmethod
+    def mainmenu() -> StateResult:
+        pass
 
     @staticmethod
     def quit() -> StateResult:
@@ -98,23 +115,29 @@ class InGame(State):
                     )
                     g.world[None].components[("Text", str)] = text
                     gold.clear()
+
+                # self.set_cell(old_x, old_y, ...)  # redraw what was there
+                # self.set_cell((player.components[Position]), player.components[Graphic])  # redraw player
+
                 return None
             case _:
                 return None
 
     def on_draw(self, console: tcod.console.Console) -> None:
         """Draw the standard screen."""
+
         for entity in g.world.Q.all_of(components=[Position, Graphic]):
             pos = entity.components[Position]
             """need a proper way to filter here"""
             if pos.x < 0:
                 pos = entity.components[Position] = Position(0, 0)
-            if not (0 <= pos.x < console.width and 0 <= pos.y < console.height):
+            if not (0 <= pos.x < 80 and 0 <= pos.y < 45):
                 continue
             graphic = entity.components[Graphic]
             console.rgb[["ch", "fg"]][pos.y, pos.x] = graphic.ch, graphic.fg
 
         if text := g.world[None].components.get(("Text", str)):
+            # noinspection PyTypeChecker
             console.print(
                 x=(console.width - len(text)),
                 y=0,

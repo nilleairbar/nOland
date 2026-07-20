@@ -1,9 +1,12 @@
 from __future__ import annotations
 
-import tcod.console
+import tcod.console  # type: ignore
+import tcod.camera  # type: ignore
 
 import g
+from game.components import Position, Graphic
 from game.state import Push, Pop, Reset, StateResult, State
+from game.tags import IsPlayer
 
 
 def main_draw() -> None:
@@ -32,9 +35,7 @@ def apply_state_result(result: StateResult) -> None:
 
 def main_loop() -> None:
     while g.states:
-        size = g.context.sdl_window.size
-        print(size[0])
-        print(size[1])
+
         main_draw()
         for event in tcod.event.wait():
             tile_event = g.context.convert_event(event)
@@ -43,11 +44,15 @@ def main_loop() -> None:
 
 
 def get_previous_state(state: State) -> State | None:
-    current_index = next(index for index, value in enumerate(g.states) if value is state)
+    current_index = next(
+        index for index, value in enumerate(g.states) if value is state
+    )
     return g.states[current_index - 1] if current_index > 0 else None
 
 
-def draw_previous_state(state: State, console: tcod.console.Console, dim: bool = True) -> None:
+def draw_previous_state(
+    state: State, console: tcod.console.Console, dim: bool = True
+) -> None:
     prev_state = get_previous_state(state)
     if prev_state is None:
         return

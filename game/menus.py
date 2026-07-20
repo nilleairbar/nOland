@@ -6,8 +6,8 @@ from collections.abc import Callable
 from typing import Protocol
 
 import attrs
-import tcod.console
-import tcod.event
+import tcod.console  # type: ignore
+import tcod.event  # type: ignore
 from tcod.event import KeySym
 
 import game.state_tools
@@ -85,11 +85,11 @@ class SelectItem(MenuItem):
             bg=(0, 0, 0),
         )
 
-        copyright = "Copyright Airbar 2026"
+        copyright_game: str = "Copyright Airbar 2026"
         console.print(
-            console.width - (len(copyright)),
-            console.height - 1,
-            copyright,
+            x=(console.width - (len(copyright_game))),
+            y=console.height - 1,
+            text=copyright_game,
             fg=(245, 235, 200),
         )
 

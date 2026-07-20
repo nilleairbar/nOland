@@ -4,7 +4,11 @@ from __future__ import annotations
 
 from random import Random
 
-from tcod.ecs import Registry
+
+import numpy as np
+import tcod  # type: ignore
+from tcod.ecs import Registry  # type: ignore
+from tcod.noise import Algorithm  # type: ignore
 
 from game.components import Gold, Graphic, Position, Blocking
 from game.tags import IsActor, IsItem, IsPlayer

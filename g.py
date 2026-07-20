@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import tcod.ecs
+import tcod.ecs  # type: ignore
 
 import game.state
 
